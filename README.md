@@ -1,36 +1,61 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ResolveAI
 
-## Getting Started
+Production-style AI customer support workspace. Support tickets are **Gmail threads** executed through **Swytchcode** (no direct Gmail SDK in the app).
 
-First, run the development server:
+## Stack
+
+Next.js 15 + TypeScript + Tailwind + `@swytchcode/runtime` + global `swytchcode` CLI.
+
+## How to run locally
+
+```bash
+npm install -g swytchcode
+swytchcode login
+cd resolve-ai
+npm install
+cp .env.example .env.local
+```
+
+### Gmail support inbox (live)
+
+```bash
+swytchcode get gmail
+swytchcode add method gmail.user.profile.get
+swytchcode add method gmail.user.threads.get
+swytchcode add method gmail.user.threads.get1
+swytchcode add method gmail.user.messages.get
+swytchcode add method gmail.user.messages.get1
+swytchcode add method gmail.user.send.create1
+swytchcode add method gmail.user.labels.get
+swytchcode add method gmail.user.modify.create1
+swytchcode auth connect Gmail
+```
+
+In `.env.local`:
+
+```env
+SWYTCHCODE_MODE=live
+SUPPORT_INBOX_EMAIL=you@gmail.com
+SUPPORT_LABEL=ResolveAI
+GMAIL_POLL_INTERVAL_MS=15000
+```
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/inbox](http://localhost:3000/inbox).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+While `SWYTCHCODE_MODE=dry-run`, Inbox stays empty on purpose (no fake Gmail tickets) and shows connection setup steps.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Docs
 
-## Learn More
+- `docs/GMAIL_SWYTCHCODE.md` — ResolveAI ↔ real Gmail canonical IDs
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+npm run start
+npm run lint
+```

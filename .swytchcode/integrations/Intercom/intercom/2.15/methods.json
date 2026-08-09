@@ -1,0 +1,809 @@
+{
+  "methods": [
+    {
+      "method_uuid": "",
+      "method_name": "Add a contact to an existing conversation",
+      "canonical_id": "intercom.conversation.customers.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Add a new attribute to a ticket type",
+      "canonical_id": "intercom.ticket_type.attributes.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Add a note to a specific contact",
+      "canonical_id": "intercom.contact.notes.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Add a tag to a specific conversation",
+      "canonical_id": "intercom.conversation.tags.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Add a tag to a specific ticket",
+      "canonical_id": "intercom.ticket.tags.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Add or remove a contact's subscription",
+      "canonical_id": "intercom.contact.subscriptions.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Archive a company and detach its contacts",
+      "canonical_id": "intercom.company.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Archive a specific contact",
+      "canonical_id": "intercom.contact.archive.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Attach a contact to a company",
+      "canonical_id": "intercom.contact.companies.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Block a contact and archive their conversations",
+      "canonical_id": "intercom.contact.block.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Cancel a content data export job",
+      "canonical_id": "intercom.export.cancel"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Convert a conversation to a ticket",
+      "canonical_id": "intercom.conversation.convert.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Convert a visitor into a lead or user",
+      "canonical_id": "intercom.visitor.convert.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a data attribute for a contact or company",
+      "canonical_id": "intercom.data_attribute.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a new article",
+      "canonical_id": "intercom.article.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a new contact or lead",
+      "canonical_id": "intercom.contact.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a new content import source",
+      "canonical_id": "intercom.ai.contentImportSources.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a new conversation with a contact",
+      "canonical_id": "intercom.conversation.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a new help center collection",
+      "canonical_id": "intercom.help_center.collections.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a new internal article",
+      "canonical_id": "intercom.internal_article.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a new news item",
+      "canonical_id": "intercom.new.newsItems.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a new support ticket",
+      "canonical_id": "intercom.ticket.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create a new ticket type with default attributes",
+      "canonical_id": "intercom.ticket_type.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create event summaries for a user",
+      "canonical_id": "intercom.event.summaries.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create or update a company record",
+      "canonical_id": "intercom.company.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create or update a custom object instance",
+      "canonical_id": "intercom.custom_object_instance.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create or update an external page using its external ID",
+      "canonical_id": "intercom.ai.externalPages.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Create, update, tag, or untag companies and contacts",
+      "canonical_id": "intercom.tag.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Delete a conversation and its associated data permanently",
+      "canonical_id": "intercom.conversation.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Delete a custom object instance by its external ID",
+      "canonical_id": "intercom.custom_object_instance.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Delete a custom object instance by its ID",
+      "canonical_id": "intercom.custom_object_instance.delete.1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Delete a help center collection by its ID",
+      "canonical_id": "intercom.help_center.collections.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Delete a specific article by its ID",
+      "canonical_id": "intercom.article.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Delete a specific internal article by its ID",
+      "canonical_id": "intercom.internal_article.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Delete a specific news item",
+      "canonical_id": "intercom.new.newsItems.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Delete a tag by its ID",
+      "canonical_id": "intercom.tag.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Delete a ticket and its associated data",
+      "canonical_id": "intercom.ticket.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Detach a company from a contact",
+      "canonical_id": "intercom.contact.companies.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Download reporting data for a specific job",
+      "canonical_id": "intercom.download.reportingData.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Download your completed content data export",
+      "canonical_id": "intercom.download.data.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Efficiently iterate over all companies using scroll",
+      "canonical_id": "intercom.company.scroll.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Enqueue a new reporting data export job",
+      "canonical_id": "intercom.export.enqueue.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Enqueue a new ticket for creation",
+      "canonical_id": "intercom.ticket.enqueue.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Export a workflow configuration by ID",
+      "canonical_id": "intercom.export.workflows.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Export message delivery and engagement data by date range",
+      "canonical_id": "intercom.export.data.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Fetch a single contact's details by ID",
+      "canonical_id": "intercom.contact.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Fetch a specific conversation by its ID",
+      "canonical_id": "intercom.conversation.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Fetch all configured away status reasons",
+      "canonical_id": "intercom.away_status_reason.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Fetch all data attributes for contacts, companies, or conversations",
+      "canonical_id": "intercom.data_attribute.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Fetch companies by ID, name, tag, or segment",
+      "canonical_id": "intercom.company.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Fetch details for a specific external page",
+      "canonical_id": "intercom.ai.externalPages.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Fetch details for a specific note",
+      "canonical_id": "intercom.note.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Fetch workspace tag details by ID",
+      "canonical_id": "intercom.tag.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Find a contact using their external ID",
+      "canonical_id": "intercom.contact.findByExternalId.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a contact's subscription preferences",
+      "canonical_id": "intercom.contact.subscriptions.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of admins for a workspace",
+      "canonical_id": "intercom.admin.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all articles",
+      "canonical_id": "intercom.article.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all brands in the workspace",
+      "canonical_id": "intercom.brand.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all contacts in your workspace",
+      "canonical_id": "intercom.contact.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all conversations with optional pagination",
+      "canonical_id": "intercom.conversation.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all external pages for a workspace",
+      "canonical_id": "intercom.ai.externalPages.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all help centers",
+      "canonical_id": "intercom.help_center.helpCenters.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all internal articles",
+      "canonical_id": "intercom.internal_article.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all news items",
+      "canonical_id": "intercom.new.newsItems.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all newsfeeds",
+      "canonical_id": "intercom.new.newsfeeds.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all segments",
+      "canonical_id": "intercom.segment.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all teams in the app",
+      "canonical_id": "intercom.team.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all ticket states",
+      "canonical_id": "intercom.ticket_state.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of all workspace tags",
+      "canonical_id": "intercom.tag.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a list of content import sources",
+      "canonical_id": "intercom.ai.contentImportSources.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a log of all admin activities",
+      "canonical_id": "intercom.admin.activityLogs.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a paginated list of all calls",
+      "canonical_id": "intercom.call.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a specific article by its ID",
+      "canonical_id": "intercom.article.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a specific brand by its ID",
+      "canonical_id": "intercom.brand.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a specific company's details by its ID",
+      "canonical_id": "intercom.company.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a specific content import source by its ID",
+      "canonical_id": "intercom.ai.contentImportSources.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a specific email setting by its ID",
+      "canonical_id": "intercom.email.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a specific help center collection by its ID",
+      "canonical_id": "intercom.help_center.collections.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a specific help center's details",
+      "canonical_id": "intercom.help_center.helpCenters.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a specific news item by its ID",
+      "canonical_id": "intercom.new.newsItems.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a specific newsfeed by its ID",
+      "canonical_id": "intercom.new.newsfeeds.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a specific segment's details",
+      "canonical_id": "intercom.segment.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get a team's details, including its admins",
+      "canonical_id": "intercom.team.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get admin details by ID",
+      "canonical_id": "intercom.admin.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get all notes for a specific company",
+      "canonical_id": "intercom.company.notes.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get all notes for a specific contact",
+      "canonical_id": "intercom.contact.notes.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get all segments for a company",
+      "canonical_id": "intercom.company.segments.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get all workspace email sender settings",
+      "canonical_id": "intercom.email.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get call transcript by call ID",
+      "canonical_id": "intercom.call.transcript.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get contacts for a specific company",
+      "canonical_id": "intercom.company.contacts.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get content data export status by job identifier",
+      "canonical_id": "intercom.export.data.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get current IP allowlist configuration",
+      "canonical_id": "intercom.ip_allowlist.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get details for a specific ticket type",
+      "canonical_id": "intercom.ticket_type.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get Fin Voice call details by external ID",
+      "canonical_id": "intercom.fin_voice.externalId.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get Fin Voice call details by ID",
+      "canonical_id": "intercom.fin_voice.collect.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get Fin Voice calls for a conversation",
+      "canonical_id": "intercom.fin_voice.conversation.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get live news items for a specific newsfeed",
+      "canonical_id": "intercom.new.items.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get segments attached to a contact",
+      "canonical_id": "intercom.contact.segments.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get tags for a specific contact",
+      "canonical_id": "intercom.contact.tags.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get the current admin and their workspace",
+      "canonical_id": "intercom.me.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get the most recent Fin Voice call by phone number",
+      "canonical_id": "intercom.fin_voice.phoneNumber.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get the status of a specific job",
+      "canonical_id": "intercom.job.status.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get the status of an export job",
+      "canonical_id": "intercom.export.reportingData.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get ticket details by ID",
+      "canonical_id": "intercom.ticket.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Get visitor details by user ID",
+      "canonical_id": "intercom.visitor.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "List all available subscription types",
+      "canonical_id": "intercom.subscription_type.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "List all available ticket types for a workspace",
+      "canonical_id": "intercom.ticket_type.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "List all help center collections",
+      "canonical_id": "intercom.help_center.collections.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "List available reporting datasets and their attributes",
+      "canonical_id": "intercom.export.getDatasets.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "List companies attached to a contact",
+      "canonical_id": "intercom.contact.companies.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "List companies, sorted by last request",
+      "canonical_id": "intercom.company.list.1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "List conversation handling events",
+      "canonical_id": "intercom.conversation.handlingEvents.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "List recent customer events by ID, email, or Intercom ID",
+      "canonical_id": "intercom.event.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Manage conversation status and assignments",
+      "canonical_id": "intercom.conversation.parts.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Merge a lead contact into a user contact",
+      "canonical_id": "intercom.contact.merge.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Redact a conversation part or source message",
+      "canonical_id": "intercom.conversation.redact.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Register a Fin Voice call with Intercom",
+      "canonical_id": "intercom.fin_voice.register.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Remove a contact from a group conversation",
+      "canonical_id": "intercom.conversation.customers.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Remove a content import source and its imported pages",
+      "canonical_id": "intercom.ai.contentImportSources.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Remove a specific contact by its ID",
+      "canonical_id": "intercom.contact.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Remove a subscription from a contact",
+      "canonical_id": "intercom.contact.subscriptions.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Remove a tag from a contact",
+      "canonical_id": "intercom.contact.tags.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Remove a tag from a conversation",
+      "canonical_id": "intercom.conversation.tags.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Remove a tag from a specific ticket",
+      "canonical_id": "intercom.ticket.tags.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Remove an external page from content library and AI answers",
+      "canonical_id": "intercom.ai.externalPages.delete"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Reply to a ticket with a message or internal note",
+      "canonical_id": "intercom.ticket.reply.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Retrieve a custom object instance by its type and ID",
+      "canonical_id": "intercom.custom_object_instance.get.1"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Retrieve a custom object instance using its external ID",
+      "canonical_id": "intercom.custom_object_instance.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Retrieve a specific call by its ID",
+      "canonical_id": "intercom.call.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Retrieve a specific internal article by its ID",
+      "canonical_id": "intercom.internal_article.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Retrieve call recording by call ID",
+      "canonical_id": "intercom.call.recording.get"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Search and filter tickets by attribute values",
+      "canonical_id": "intercom.ticket.search.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Search calls and retrieve their transcripts",
+      "canonical_id": "intercom.call.search.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Search contacts by attribute values",
+      "canonical_id": "intercom.contact.search.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Search conversations by attribute value",
+      "canonical_id": "intercom.conversation.search.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Search for articles by phrase, state, or help center",
+      "canonical_id": "intercom.article.search.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Search for internal articles by folder or query",
+      "canonical_id": "intercom.internal_article.search.list"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Send a reply to a conversation",
+      "canonical_id": "intercom.conversation.reply.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Send a user's reply to Fin",
+      "canonical_id": "intercom.fin.reply.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Send an admin-initiated message via in-app or email",
+      "canonical_id": "intercom.message.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Send an SMS to redirect phone calls to Intercom Messenger",
+      "canonical_id": "intercom.phone_call_redirect.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Set an admin to away for the inbox",
+      "canonical_id": "intercom.admin.away.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Start a conversation with Fin by sending user messages and context",
+      "canonical_id": "intercom.fin.start"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Submit a data event for a user or lead",
+      "canonical_id": "intercom.event.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Tag a specific contact with a given tag",
+      "canonical_id": "intercom.contact.tags.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Unarchive a specific contact",
+      "canonical_id": "intercom.contact.unarchive.create"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update a company's details using its ID",
+      "canonical_id": "intercom.company.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update a data attribute's details",
+      "canonical_id": "intercom.data_attribute.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update a specific news item",
+      "canonical_id": "intercom.new.newsItems.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update a ticket type with new details",
+      "canonical_id": "intercom.ticket_type.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update an attribute for a ticket type",
+      "canonical_id": "intercom.ticket_type.attributes.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update an existing article's details",
+      "canonical_id": "intercom.article.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update an existing contact or associate it with a custom object",
+      "canonical_id": "intercom.contact.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update an existing content import source",
+      "canonical_id": "intercom.ai.contentImportSources.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update an existing conversation",
+      "canonical_id": "intercom.conversation.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update an existing external page",
+      "canonical_id": "intercom.ai.externalPages.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update an existing ticket by its ID",
+      "canonical_id": "intercom.ticket.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update an existing visitor",
+      "canonical_id": "intercom.visitor.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update an internal article by its ID",
+      "canonical_id": "intercom.internal_article.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update details for a specific help center collection",
+      "canonical_id": "intercom.help_center.collections.update"
+    },
+    {
+      "method_uuid": "",
+      "method_name": "Update IP allowlist settings for your workspace",
+      "canonical_id": "intercom.ip_allowlist.update"
+    }
+  ]
+}
