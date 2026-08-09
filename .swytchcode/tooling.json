@@ -11,7 +11,7 @@
       "version": "2026-06-24.dahlia"
     }
   },
-  "mode": "sandbox",
+  "mode": "production",
   "tools": {
     "gmail.user.labels.get": {
       "desc": "Lists all labels in the user's mailbox. For more information, see [Manage labels](https://developers.google.com/workspace/gmail/api/guides/labels).",
