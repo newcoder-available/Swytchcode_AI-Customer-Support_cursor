@@ -1,4 +1,4 @@
-import { gmailExec, unwrapData } from "@/lib/gmail/client";
+import { gmailExec, unwrapData, readGmailPayload } from "@/lib/gmail/client";
 import {
   buildReplyRfc822,
   encodeRawRfc822,
@@ -6,7 +6,7 @@ import {
   headerValue,
   parseEmailAddress,
 } from "@/lib/gmail/parse";
-import { getTicketState, upsertTicketState } from "@/lib/gmail/store";
+import { getTicketState, upsertTicketState, listCreatedTickets } from "@/lib/gmail/store";
 import {
   classifyMessageRole,
   deriveTicketStatus,
@@ -34,16 +34,18 @@ function supportInboxEmail() {
 function supportQuery(): string {
   const label = process.env.SUPPORT_LABEL?.trim();
   const prefix = process.env.SUPPORT_SUBJECT_PREFIX?.trim();
-  const inbox = supportInboxEmail();
-  const parts: string[] = ["in:inbox"];
-  if (label) parts.push(`label:${label}`);
-  if (prefix) parts.push(`subject:(${prefix})`);
-  if (inbox) parts.push(`(to:${inbox} OR deliveredto:${inbox})`);
-  // Fallback broad inbox if no filters configured
-  if (!label && !prefix && !inbox) {
-    return "in:inbox -category:promotions -category:social newer_than:30d";
+  const requireLabel =
+    process.env.SUPPORT_LABEL_REQUIRED?.trim().toLowerCase() === "true";
+
+  // ResolveAI-created mail only. App-created tickets are also merged from local store.
+  if (requireLabel && label) {
+    return `newer_than:30d label:${label}`;
   }
-  return parts.join(" ");
+
+  const orParts = ['subject:"[ResolveAI]"'];
+  if (prefix) orParts.push(`subject:(${prefix})`);
+  if (label) orParts.push(`label:${label}`);
+  return `newer_than:30d (${orParts.join(" OR ")})`;
 }
 
 function asRecord(value: unknown): Record<string, unknown> {
@@ -94,8 +96,8 @@ export async function getGmailConnection(): Promise<GmailConnectionState> {
     };
   }
 
-  // Dry-run without live OAuth: return instantly so the UI never hangs.
-  // Real mailbox listing only happens in live mode.
+  // Live: rely on connected OAuth from `swytchcode auth connect Gmail`.
+  // Never pass a fake Bearer token — it overrides OAuth and returns 401.
   if (mode === "dry-run") {
     return {
       connected: false,
@@ -119,11 +121,23 @@ export async function getGmailConnection(): Promise<GmailConnectionState> {
     };
   }
 
-  const data = asRecord(unwrapData(result));
+  const parsed = readGmailPayload(result);
+  if (parsed.httpError) {
+    return {
+      connected: false,
+      emailAddress: configuredEmail,
+      mode: "live",
+      error:
+        parsed.statusCode === 401
+          ? "Gmail connection unavailable — run `swytchcode auth connect Gmail`."
+          : parsed.httpError,
+    };
+  }
+
+  const data = parsed.data;
   const email =
     String(data.emailAddress || configuredEmail || "") || null;
 
-  // Dry-run preview shape (should not appear in live, but guard anyway)
   if ("url" in data || "method" in data) {
     return {
       connected: false,
@@ -221,7 +235,21 @@ export async function listSupportTickets(): Promise<{
     };
   }
 
-  const payload = asRecord(unwrapData(list));
+  const parsed = readGmailPayload(list);
+  if (parsed.httpError) {
+    return {
+      ok: false,
+      mode: connection.mode,
+      tickets: [],
+      error:
+        parsed.statusCode === 401
+          ? "Gmail connection unavailable"
+          : parsed.httpError,
+      connection,
+    };
+  }
+
+  const payload = parsed.data;
 
   if ("url" in payload || "method" in payload) {
     return {
@@ -238,10 +266,64 @@ export async function listSupportTickets(): Promise<{
   const supportEmail =
     connection.emailAddress || supportInboxEmail() || "me";
 
+  const created = listCreatedTickets();
+  const createdById = new Map(created.map((c) => [c.id, c]));
+
   const tickets = threads
     .slice(0, 25)
-    .map((t) => ticketFromListSnippet(asRecord(t)))
+    .map((t) => {
+      const base = ticketFromListSnippet(asRecord(t));
+      if (!base) return null;
+      const local = createdById.get(base.id);
+      if (!local) return base;
+      return {
+        ...base,
+        customerEmail: local.customerEmail,
+        customerName: local.customerName,
+        subject: local.subject,
+        status: local.status,
+        priority: local.priority,
+        aiConfidence: local.aiConfidence,
+        resolution: local.agentAnswer,
+        snippet: local.description.slice(0, 120),
+        knowledgeSources: local.knowledgeSources,
+        activity: local.activity,
+        updatedAt: local.updatedAt,
+        createdAt: local.createdAt,
+      };
+    })
     .filter((t): t is GmailSupportTicket => Boolean(t));
+
+  // Always surface app-created tickets in Inbox (even if Gmail search misses them).
+  const seen = new Set(tickets.map((t) => t.id));
+  for (const c of created) {
+    if (seen.has(c.id) || c.id.startsWith("local-")) continue;
+    tickets.push({
+      id: c.id,
+      source: "gmail",
+      customerEmail: c.customerEmail,
+      customerName: c.customerName,
+      subject: c.subject,
+      status: c.status,
+      priority: c.priority,
+      createdAt: c.createdAt,
+      updatedAt: c.updatedAt,
+      messageCount: 0,
+      lastMessageAt: c.updatedAt,
+      lastMessageFrom: "agent",
+      aiConfidence: c.aiConfidence,
+      resolution: c.agentAnswer,
+      snippet: c.description.slice(0, 120),
+      unread: false,
+      labels: [],
+      lastProcessedMessageId: null,
+      messages: [],
+      knowledgeSources: c.knowledgeSources,
+      activity: c.activity,
+      mode: "live",
+    });
+    seen.add(c.id);
+  }
 
   tickets.sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
 
@@ -275,7 +357,17 @@ export async function getTicketThread(threadId: string): Promise<{
     return { ok: false, error: result.error || "Thread retrieval failed" };
   }
 
-  const payload = asRecord(unwrapData(result));
+  const parsed = readGmailPayload(result);
+  if (parsed.httpError) {
+    return {
+      ok: false,
+      error:
+        parsed.statusCode === 401
+          ? "Gmail connection unavailable"
+          : parsed.httpError,
+    };
+  }
+  const payload = parsed.data;
   if ("url" in payload || "method" in payload) {
     return {
       ok: false,
@@ -413,8 +505,17 @@ export async function replyToTicket(input: {
     return { ok: false, error: send.error || "Reply could not be sent." };
   }
 
-  const data = asRecord(unwrapData(send));
-  if ("url" in data || "method" in data) {
+  const parsed = readGmailPayload(send);
+  if (parsed.httpError) {
+    return {
+      ok: false,
+      error:
+        parsed.statusCode === 401
+          ? "Gmail connection unavailable"
+          : parsed.httpError,
+    };
+  }
+  if ("url" in parsed.data || "method" in parsed.data) {
     return {
       ok: true,
       dryRun: true,
@@ -423,7 +524,7 @@ export async function replyToTicket(input: {
     };
   }
 
-  const messageId = String(data.id || "");
+  const messageId = String(parsed.data.id || "");
   upsertTicketState(input.threadId, {
     status: "AI_RESPONDED",
     lastAiMessageId: messageId || null,

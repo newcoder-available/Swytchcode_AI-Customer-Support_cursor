@@ -1,9 +1,34 @@
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import type { GmailSupportTicket, GmailTicketStatus } from "@/lib/gmail/types";
+import type {
+  GmailSupportTicket,
+  GmailTicketPriority,
+  GmailTicketStatus,
+} from "@/lib/gmail/types";
+
+export type CreatedTicketRecord = {
+  id: string;
+  source: "gmail";
+  customerEmail: string;
+  customerName: string;
+  subject: string;
+  description: string;
+  status: GmailTicketStatus;
+  priority: GmailTicketPriority;
+  createdAt: string;
+  updatedAt: string;
+  notificationSent: boolean;
+  notificationMessageId: string | null;
+  threadId: string;
+  aiConfidence: number | null;
+  agentAnswer: string | null;
+  activity: string[];
+  knowledgeSources: Array<{ sourceId: string; title: string; score: number }>;
+};
 
 type StoreShape = {
   processedMessageIds: string[];
+  createdTickets: CreatedTicketRecord[];
   tickets: Record<
     string,
     {
@@ -18,12 +43,19 @@ type StoreShape = {
       activity: string[];
       knowledgeSources: Array<{ sourceId: string; title: string; score: number }>;
       updatedAt: string;
+      customerEmail?: string;
+      customerName?: string;
+      subject?: string;
+      description?: string;
+      notificationSent?: boolean;
+      notificationMessageId?: string | null;
     }
   >;
 };
 
 const DEFAULT_STORE: StoreShape = {
   processedMessageIds: [],
+  createdTickets: [],
   tickets: {},
 };
 
@@ -41,7 +73,14 @@ function ensureStore(): StoreShape {
   }
   try {
     const raw = readFileSync(path, "utf8");
-    return { ...DEFAULT_STORE, ...JSON.parse(raw) } as StoreShape;
+    const parsed = JSON.parse(raw) as Partial<StoreShape>;
+    return {
+      ...DEFAULT_STORE,
+      ...parsed,
+      createdTickets: parsed.createdTickets ?? [],
+      tickets: parsed.tickets ?? {},
+      processedMessageIds: parsed.processedMessageIds ?? [],
+    };
   } catch {
     return structuredClone(DEFAULT_STORE);
   }
@@ -60,7 +99,6 @@ export function markMessageProcessed(messageId: string) {
   const store = ensureStore();
   if (!store.processedMessageIds.includes(messageId)) {
     store.processedMessageIds.push(messageId);
-    // Keep bounded
     if (store.processedMessageIds.length > 5000) {
       store.processedMessageIds = store.processedMessageIds.slice(-4000);
     }
@@ -94,4 +132,48 @@ export function upsertTicketState(
   };
   saveStore(store);
   return store.tickets[threadId];
+}
+
+export function saveCreatedTicket(ticket: CreatedTicketRecord) {
+  const store = ensureStore();
+  const idx = store.createdTickets.findIndex((t) => t.id === ticket.id);
+  if (idx >= 0) store.createdTickets[idx] = ticket;
+  else store.createdTickets.unshift(ticket);
+  store.createdTickets = store.createdTickets.slice(0, 200);
+
+  store.tickets[ticket.id] = {
+    ...(store.tickets[ticket.id] ?? {
+      status: ticket.status,
+      aiConfidence: null,
+      resolution: null,
+      lastProcessedMessageId: null,
+      lastAiMessageId: null,
+      activity: [],
+      knowledgeSources: [],
+      updatedAt: ticket.updatedAt,
+    }),
+    status: ticket.status,
+    priority: ticket.priority,
+    aiConfidence: ticket.aiConfidence,
+    activity: ticket.activity,
+    knowledgeSources: ticket.knowledgeSources,
+    customerEmail: ticket.customerEmail,
+    customerName: ticket.customerName,
+    subject: ticket.subject,
+    description: ticket.description,
+    notificationSent: ticket.notificationSent,
+    notificationMessageId: ticket.notificationMessageId,
+    updatedAt: ticket.updatedAt,
+  };
+
+  saveStore(store);
+  return ticket;
+}
+
+export function listCreatedTickets(): CreatedTicketRecord[] {
+  return ensureStore().createdTickets;
+}
+
+export function getCreatedTicket(id: string): CreatedTicketRecord | null {
+  return ensureStore().createdTickets.find((t) => t.id === id) ?? null;
 }

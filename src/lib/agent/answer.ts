@@ -49,18 +49,53 @@ async function executeAction(
     subject: string;
     description: string;
     customerEmail: string;
+    customerName?: string;
     ticketId?: string;
     chargeId?: string;
   },
 ): Promise<AgentExecution> {
   if (action === "ticket.create") {
+    // Prefer Gmail ticket + email notification (primary architecture).
+    const { createSupportTicketFromInput } = await import("@/lib/gmail/create");
+    const gmailTicket = await createSupportTicketFromInput({
+      customerName: ctx.customerName || ctx.customerEmail.split("@")[0],
+      customerEmail: ctx.customerEmail,
+      subject: ctx.subject.slice(0, 120) || "Support escalation",
+      description: ctx.description,
+      runAgent: false,
+    });
+    if (gmailTicket.ok && gmailTicket.ticket) {
+      return {
+        ok: true,
+        mode: (gmailTicket.mode as "dry-run" | "live" | "simulation") || "live",
+        channel: "swytchcode",
+        canonicalId: "gmail.user.send.create1",
+        summary:
+          gmailTicket.notification?.summary ||
+          `Gmail ticket ${gmailTicket.ticket.id} created for ${gmailTicket.ticket.customerEmail}`,
+        data: {
+          ticketId: gmailTicket.ticket.id,
+          customerEmail: gmailTicket.ticket.customerEmail,
+          notificationSent: gmailTicket.ticket.notificationSent,
+        },
+      };
+    }
+
+    // Fallback to Intercom if Gmail notify fails.
     const result = await createTicket({
       subject: ctx.subject.slice(0, 120) || "Support escalation",
       description: ctx.description,
       customerEmail: ctx.customerEmail,
       priority: "high",
     });
-    return toExecution(result);
+    const exec = toExecution(result);
+    if (!gmailTicket.ok) {
+      return {
+        ...exec!,
+        summary: `${gmailTicket.error || "Gmail ticket failed"}; fallback: ${exec?.summary}`,
+      };
+    }
+    return exec;
   }
 
   if (action === "ticket.get") {

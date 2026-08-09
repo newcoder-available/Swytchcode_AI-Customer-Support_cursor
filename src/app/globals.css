@@ -1093,13 +1093,68 @@ table.data a.row-link {
   border-radius: inherit;
 }
 
-.error-banner {
-  margin: 0 16px 8px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: var(--red-soft);
-  color: var(--red);
+.tickets-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.create-ticket-form h2 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.create-ticket-form .field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
   font-size: 12.5px;
+  font-weight: 600;
+}
+
+.create-ticket-form .field .input,
+.create-ticket-form .field .select {
+  font-weight: 500;
+}
+
+.create-ticket-form textarea.input {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.tickets-main {
+  display: grid;
+  gap: 12px;
+}
+
+.success-card {
+  border-color: #b7e6db;
+  background: linear-gradient(180deg, #f3fbf8, #fff);
+}
+
+.success-card h3 {
+  margin: 0 0 10px;
+}
+
+.agent-preview {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.agent-preview h4 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 980px) {
+  .tickets-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 .skeleton {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import type { GmailSupportTicket } from "@/lib/gmail/types";
 
 type InboxResponse = {
@@ -54,8 +55,10 @@ async function fetchJson<T>(
 }
 
 export function InboxWorkspace() {
+  const searchParams = useSearchParams();
+  const threadFromUrl = searchParams.get("thread");
   const [tickets, setTickets] = useState<GmailSupportTicket[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(threadFromUrl);
   const [ticket, setTicket] = useState<GmailSupportTicket | null>(null);
   const [loadingInbox, setLoadingInbox] = useState(true);
   const [loadingThread, setLoadingThread] = useState(false);
@@ -84,13 +87,17 @@ export function InboxWorkspace() {
       setSupportEmail(data.connection?.emailAddress ?? null);
       setConnected(Boolean(data.connection?.connected));
       setPollMs(data.pollIntervalMs || 15000);
-      setTickets(data.tickets || []);
+        setTickets(data.tickets || []);
       setConnectionError(
         data.error ||
           data.connection?.error ||
           (!data.ok ? "Gmail connection unavailable" : null),
       );
       setSelectedId((prev) => {
+        const fromUrl = threadFromUrl;
+        if (fromUrl && (data.tickets || []).some((t) => t.id === fromUrl)) {
+          return fromUrl;
+        }
         if (prev && (data.tickets || []).some((t) => t.id === prev)) return prev;
         return data.tickets?.[0]?.id || null;
       });
@@ -108,7 +115,7 @@ export function InboxWorkspace() {
       loadingInboxRef.current = false;
       setLoadingInbox(false);
     }
-  }, []);
+  }, [threadFromUrl]);
 
   const loadThread = useCallback(async (threadId: string) => {
     setLoadingThread(true);
@@ -144,6 +151,10 @@ export function InboxWorkspace() {
   useEffect(() => {
     void loadInbox();
   }, [loadInbox]);
+
+  useEffect(() => {
+    if (threadFromUrl) setSelectedId(threadFromUrl);
+  }, [threadFromUrl]);
 
   useEffect(() => {
     if (selectedId) void loadThread(selectedId);
@@ -272,8 +283,8 @@ export function InboxWorkspace() {
             <h3>No support tickets</h3>
             <p>
               {liveReady
-                ? "Send an email to your support inbox to create the first ticket."
-                : "This is not simulated Gmail data. Connect your mailbox to see real threads."}
+                ? "Create a ticket on the Tickets page, or email your support Gmail. Created tickets also appear here automatically."
+                : "Connect Gmail and set SWYTCHCODE_MODE=live, then create a ticket from Tickets."}
             </p>
             {!liveReady && (
               <ol className="setup-steps">
@@ -283,7 +294,7 @@ export function InboxWorkspace() {
                 <li>
                   Set <code>SWYTCHCODE_MODE=live</code> in <code>.env.local</code>
                 </li>
-                <li>Restart the app and refresh Inbox</li>
+                <li>Restart the app and open Tickets to create one</li>
               </ol>
             )}
           </div>

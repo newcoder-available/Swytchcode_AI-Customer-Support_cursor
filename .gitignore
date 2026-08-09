@@ -48,3 +48,6 @@ gmail-methods-tmp.json
 
 .cursor/
 .swytchcode/workspace.json
+
+.swytchcode/logs/
+

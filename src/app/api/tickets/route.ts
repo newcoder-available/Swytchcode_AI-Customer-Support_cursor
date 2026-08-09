@@ -1,14 +1,36 @@
 import { NextResponse } from "next/server";
-import { createTicket, getTicket } from "@/lib/swytchcode/actions";
+import { createSupportTicketFromInput } from "@/lib/gmail/create";
+import {
+  getCreatedTicket,
+  listCreatedTickets,
+} from "@/lib/gmail/store";
 import {
   MAX_DESCRIPTION_CHARS,
-  MAX_ID_CHARS,
   MAX_SUBJECT_CHARS,
   requireTrimmedString,
   sanitizeUserText,
 } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id")?.trim();
+  if (id) {
+    const ticket = getCreatedTicket(id);
+    if (!ticket) {
+      return NextResponse.json(
+        { ok: false, error: "Ticket not found", category: "not_found" },
+        { status: 404 },
+      );
+    }
+    return NextResponse.json({ ok: true, ticket });
+  }
+  return NextResponse.json({
+    ok: true,
+    tickets: listCreatedTickets(),
+  });
+}
 
 export async function POST(request: Request) {
   let body: unknown;
@@ -23,18 +45,17 @@ export async function POST(request: Request) {
 
   try {
     const parsed = body as {
-      action?: "create" | "get";
-      ticketId?: string;
+      customerName?: string;
+      customerEmail?: string;
       subject?: string;
       description?: string;
-      customerEmail?: string;
-      priority?: "low" | "normal" | "high";
-      /** Ignored — operations are allowlisted server-side only. */
+      message?: string;
+      priority?: "LOW" | "NORMAL" | "HIGH" | "URGENT";
+      runAgent?: boolean;
       canonical_id?: unknown;
       command?: unknown;
     };
 
-    // Reject attempts to override the Swytchcode canonical ID from the client.
     if (parsed.canonical_id != null || parsed.command != null) {
       return NextResponse.json(
         {
@@ -47,63 +68,53 @@ export async function POST(request: Request) {
       );
     }
 
-    if (parsed.action === "get") {
-      const idCheck = requireTrimmedString(
-        parsed.ticketId,
-        "ticketId",
-        MAX_ID_CHARS,
-      );
-      if (!idCheck.ok) {
-        return NextResponse.json(
-          { ok: false, error: idCheck.error, category: "validation" },
-          { status: 400 },
-        );
-      }
-      const result = await getTicket(sanitizeUserText(idCheck.value));
-      return NextResponse.json(result, { status: result.ok ? 200 : 422 });
-    }
+    const subjectCheck = requireTrimmedString(
+      parsed.subject,
+      "subject",
+      MAX_SUBJECT_CHARS,
+    );
+    const descriptionRaw = parsed.description ?? parsed.message;
+    const descriptionCheck = requireTrimmedString(
+      descriptionRaw,
+      "description",
+      MAX_DESCRIPTION_CHARS,
+    );
+    const emailCheck = requireTrimmedString(
+      parsed.customerEmail,
+      "customerEmail",
+      254,
+    );
 
-    if (parsed.action === "create" || !parsed.action) {
-      const subjectCheck = requireTrimmedString(
-        parsed.subject,
-        "subject",
-        MAX_SUBJECT_CHARS,
-      );
-      const descriptionCheck = requireTrimmedString(
-        parsed.description,
-        "description",
-        MAX_DESCRIPTION_CHARS,
-      );
-      if (!subjectCheck.ok || !descriptionCheck.ok) {
-        return NextResponse.json(
-          {
-            ok: false,
-            error: !subjectCheck.ok
+    if (!subjectCheck.ok || !descriptionCheck.ok || !emailCheck.ok) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: !emailCheck.ok
+            ? emailCheck.error
+            : !subjectCheck.ok
               ? subjectCheck.error
               : descriptionCheck.error,
-            category: "validation",
-          },
-          { status: 400 },
-        );
-      }
-      const result = await createTicket({
-        subject: sanitizeUserText(subjectCheck.value),
-        description: sanitizeUserText(descriptionCheck.value),
-        customerEmail: parsed.customerEmail?.trim() || "demo@resolve.ai",
-        priority: parsed.priority,
-      });
-      return NextResponse.json(result, { status: result.ok ? 200 : 422 });
+          category: "validation",
+        },
+        { status: 400 },
+      );
     }
 
-    return NextResponse.json(
-      { ok: false, error: "unknown action", category: "validation" },
-      { status: 400 },
-    );
+    const result = await createSupportTicketFromInput({
+      customerName: sanitizeUserText(parsed.customerName?.trim() || ""),
+      customerEmail: sanitizeUserText(emailCheck.value),
+      subject: sanitizeUserText(subjectCheck.value),
+      description: sanitizeUserText(descriptionCheck.value),
+      priority: parsed.priority,
+      runAgent: parsed.runAgent !== false,
+    });
+
+    return NextResponse.json(result, { status: result.ok ? 200 : 422 });
   } catch (err) {
     return NextResponse.json(
       {
         ok: false,
-        error: err instanceof Error ? err.message : "ticket action failed",
+        error: err instanceof Error ? err.message : "ticket create failed",
         category: "internal",
       },
       { status: 500 },

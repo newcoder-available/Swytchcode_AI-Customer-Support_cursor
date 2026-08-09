@@ -83,3 +83,22 @@ export function buildReplyRfc822(input: {
   lines.push("", input.body);
   return lines.join("\r\n");
 }
+
+/** New outbound message (creates a Gmail thread = support ticket). */
+export function buildOutboundRfc822(input: {
+  to: string;
+  from: string;
+  subject: string;
+  body: string;
+}): string {
+  const lines = [
+    `From: ${input.from}`,
+    `To: ${input.to}`,
+    `Subject: ${input.subject}`,
+    "MIME-Version: 1.0",
+    'Content-Type: text/plain; charset="UTF-8"',
+    "",
+    input.body,
+  ];
+  return lines.join("\r\n");
+}
