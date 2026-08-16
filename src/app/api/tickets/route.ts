@@ -86,14 +86,17 @@ export async function POST(request: Request) {
     );
 
     if (!subjectCheck.ok || !descriptionCheck.ok || !emailCheck.ok) {
+      const error = !emailCheck.ok
+        ? emailCheck.error
+        : !subjectCheck.ok
+          ? subjectCheck.error
+          : !descriptionCheck.ok
+            ? descriptionCheck.error
+            : "validation failed";
       return NextResponse.json(
         {
           ok: false,
-          error: !emailCheck.ok
-            ? emailCheck.error
-            : !subjectCheck.ok
-              ? subjectCheck.error
-              : descriptionCheck.error,
+          error,
           category: "validation",
         },
         { status: 400 },

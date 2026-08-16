@@ -6,9 +6,9 @@ async function main() {
     if (m) process.env[m[1].trim()] = m[2].trim();
   }
 
-  const { gmailExec, unwrapData } = await import("../src/lib/gmail/client.ts");
+  const { gmailExec, unwrapData } = await import("../src/lib/gmail/client");
   const { buildOutboundRfc822, encodeRawRfc822 } = await import(
-    "../src/lib/gmail/parse.ts"
+    "../src/lib/gmail/parse"
   );
 
   const rfc = buildOutboundRfc822({

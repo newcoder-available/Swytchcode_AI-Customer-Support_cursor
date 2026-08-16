@@ -221,7 +221,7 @@ export async function listSupportTickets(): Promise<{
     params: {
       userId: supportUserId(),
       q: supportQuery(),
-      maxResults: 25,
+      maxResults: "25",
     },
   });
 
@@ -466,7 +466,7 @@ export async function replyToTicket(input: {
       id: lastCustomer.id,
       format: "metadata",
       metadataHeaders: ["Message-ID", "References", "Subject", "From"],
-    },
+    } as unknown as Record<string, string>,
   });
   let inReplyTo = messageIdHeader;
   let references = "";
